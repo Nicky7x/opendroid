@@ -246,12 +246,14 @@ class ModelFetcher @Inject constructor(
         do {
             val url = "https://generativelanguage.googleapis.com/v1beta/models".toHttpUrlOrNull()
                 ?.newBuilder()
-                ?.addQueryParameter("key", apiKey)
                 ?.addQueryParameter("pageSize", "200")
                 ?.apply { pageToken?.let { addQueryParameter("pageToken", it) } }
                 ?.build()
                 ?: throw IOException("Could not build the Gemini models request.")
-            val page = getJson(url = url.toString(), headers = emptyMap())
+            val page = getJson(
+                url = url.toString(),
+                headers = mapOf("x-goog-api-key" to apiKey)
+            )
             models += ModelListParsers.gemini(page, provider)
             pageToken = page.optString("nextPageToken").takeIf { it.isNotBlank() }
             pagesFetched++
