@@ -57,6 +57,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Keep the patched build installable alongside the official OpenDroid app.
+            applicationIdSuffix ".aqfix"
+        }
         release {
             minifyEnabled true
             shrinkResources = false
